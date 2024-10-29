@@ -37,16 +37,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name'=>'required|string|min:3|max:255',
-            'parent_id'=>[
-                'nullable','int','exists:categories,id'
-            ],
-            'image'=>[
-                'image','max:1048576','dimensions:width=100,height=100'
-            ],
-            'status'=>'in:active,archived'
-        ]);
+        $request->validate(Category::rules());
         $request->merge([
             'slug'=>Str::slug($request->post('name'))
         ]);
@@ -98,18 +89,21 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $request->validate(Category::rules($id));
         $category=Category::findOrFail($id);
 
         $old_image=$category->image;
 
         $data=$request->except('image');
 
-        $data['image']=$this->uploadImage($request);
+        $new_image=$this->uploadImage($request);
 
-
+        if ($new_image){
+            $data['image']= $new_image;
+        }
         $category->update($data);
 
-        if ($old_image && $data['image']){
+        if ($old_image && $new_image){
             Storage::disk('public')->delete($old_image);
         }
         return Redirect::route('dashboard.categories.index')
