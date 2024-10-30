@@ -11,16 +11,8 @@
 @endif
 
 <div class="form-group">
-    <label for="">Category Name</label>
-    <input type="text" name="name" @class([
-        'form-control',
-        'is-invalid'=>$errors->has('name')
-    ]) value="{{old('name', $category->name)}}">
-    @error('name')
-        <div class="text-danger">
-            {{$message}}
-        </div>
-    @enderror
+
+    <x-form.input label="Category Name" class="form-control-lg" name="name" :value="$category->name"/>
 </div>
 
 <div class="form-group">
@@ -34,15 +26,13 @@
 </div>
 
 <div class="form-group">
-    <label for="">Description</label>
-    <textarea name="description" class="form-control">
-                {{old('description', $category->description)}}
-            </textarea>
+    <x-form.label id="description">Description</x-form.label>
+    <x-form.textarea name="description" :value="$category->description"/>
 </div>
 
 <div class="form-group">
-    <label for="">Image</label>
-    <input type="file" name="image" class="form-control" accept="image/*">
+    <x-form.label id="image">Image</x-form.label>
+    <x-form.input label="Image" type="file" name="image" accept="image/*" />
     @if($category->image)
         <img src="{{asset('storage/'.$category->image)}}" alt="" height="60">
     @endif
@@ -50,18 +40,9 @@
 
 <div class="form-group">
     <label for="">Status</label>
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="status"  value="active" @checked(old('status', $category->status)=='active')>
-        <label class="form-check-label">
-            Active
-        </label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="status"  value="archived" @checked(old('status', $category->status) =='archived')>
-        <label class="form-check-label">
-            Archived
-        </label>
-    </div>
+    <x-form.radio name="status" :checked="$category->status"
+                  :options="['active' =>'Active' ,'archived'=>'Archived']"
+    />
 </div>
 
 

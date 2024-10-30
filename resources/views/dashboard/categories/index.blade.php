@@ -20,17 +20,9 @@
     </div>
 
 
-    @if(session()->has('success'))
-        <div class="alert alert-success">
-            {{session('success')}}
-        </div>
-    @endif
+    <x-alert type="success"/>
+    <x-alert type="info"/>
 
-    @if(session()->has('info'))
-        <div class="alert alert-info">
-            {{session('info')}}
-        </div>
-    @endif
     <table class="table">
         <thead>
             <tr>
