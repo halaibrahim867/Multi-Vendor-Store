@@ -172,18 +172,18 @@ Nora Silvester
       <!-- Sidebar user panel (optional) -->
 
         @auth()
-         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="{{asset('dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
-        </div>
-        <div class="info">
-          <a href="#" class="d-block">{{auth()->user()->name}}</a>
-            <form action="{{route('logout')}}" method="post">
-                @csrf
-                <buttton type="submit" class="btn btn-sm btn-outline-primary">Logout</button>
-            </form>
-        </div>
-      </div>
+             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="image">
+                  <img src="{{asset('dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
+                </div>
+                <div class="info">
+                  <a href="#" class="d-block">{{auth()->user()->name}}</a>
+                    <form action="{{route('logout')}}" method="post">
+                        @csrf
+                        <button type="submit" class="btn btn-sm btn-outline-primary">Logout</button>
+                    </form>
+                </div>
+          </div>
         @endauth
       <!-- SidebarSearch Form -->
       <div class="form-inline">
@@ -198,7 +198,8 @@ Nora Silvester
       </div>
 
       <!-- Sidebar Menu -->
-        @include('layouts.partials.nav')
+        {{-- @include('layouts.partials.nav')--}}
+        <x-nav context="side"/>
       <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
