@@ -19,17 +19,15 @@ class CategoryController extends Controller
     public function index()
     {
         $request= \request();
-        $query = Category::query();
 
-        if ($name = $request->query('name')){
-            $query->where('name','LIKE',"%{$name}%");
-        }
+        $categories=Category::leftJoin('categories as parents', 'parents.id' ,'=','categories.parent_id')
+            ->select([
+                'categories.*',
+                'parents.name as parent_name'
+            ])
+            ->orderBy('categories.name')
+            ->filter($request->query())->paginate();
 
-        if ($status = $request->query('status')){
-            $query->where('status','=',"%{$status}%");
-        }
-
-        $categories=Category::paginate(2);
         return view('dashboard.categories.index',compact('categories'));
     }
 
