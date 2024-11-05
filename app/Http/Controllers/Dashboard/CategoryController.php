@@ -129,9 +129,7 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        if ($category->image){
-            Storage::disk('public')->delete($category->image);
-        }
+
         return Redirect::route('dashboard.categories.index')
             ->with('success','Category Deleted!');
     }
@@ -148,5 +146,33 @@ class CategoryController extends Controller
 
             return $path;
 
+    }
+
+    public function trash(){
+        $categories = Category::onlyTrashed()->paginate();
+
+        return view('dashboard.categories.trash',compact('categories'));
+    }
+
+    public function restore(Request $request, $id){
+        $category = Category::onlyTrashed()->findOrFail($id);
+
+        $category->restore();
+
+        return \redirect()->route('dashboard.categories.trash')
+                ->with('success','Category restored!');
+    }
+
+    public function forceDelete( $id){
+        $category = Category::onlyTrashed()->findOrFail($id);
+
+        $category->forceDelete();
+
+        if ($category->image){
+            Storage::disk('public')->delete($category->image);
+        }
+
+        return \redirect()->route('dashboard.categories.trash')
+            ->with('success','Category deleted forever!');
     }
 }
