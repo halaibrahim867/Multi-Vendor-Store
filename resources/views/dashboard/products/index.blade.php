@@ -41,6 +41,7 @@
                 <th>Name</th>
                 <th>Category</th>
                 <th>Store</th>
+                <th>Status</th>
                 <th>Created At</th>
                 <th colspan="2"></th>
             </tr>

@@ -24,7 +24,7 @@ class CategoryController extends Controller
         /*leftJoin('categories as parents', 'parents.id' ,'=','categories.parent_id')
             ->select([
                 'categories.*',
-                'parznts.name as parent_name'
+                'parents.name as parent_name'
             ])*/
             ->withCount([
                 'products as product_count' =>function($query){
