@@ -13,60 +13,62 @@ use Illuminate\Support\Str;
 
 class CartModelRepository implements CartRepository
 {
+    protected $items;
+
+    public function __construct()
+    {
+        $this->items=collect([]);
+    }
+
     public function get(): Collection
     {
-        return Cart::with('product')
-                     ->where('cookie_id','=',$this->getCookieId())->get();
+        if (!$this->items->count()){
+             $this->items= Cart::with('product')->get();
+        }
+        return $this->items;
     }
-    public function add(Product $product, $quatity = 1)
+    public function add(Product $product, $quantity = 1)
     {
         $item=Cart::where('product_id','=',$product->id)
-            ->where('cookie_id','=',$this->getCookieId())
             ->first();
 
         if (!$item){
-            return  Cart::create([
-                'cookie_id'=>$this->getCookieId(),
+            $cart= Cart::create([
                 'user_id'=>Auth::id(),
                 'product_id'=>$product->id,
-                'quantity'=>$quatity,
+                'quantity'=>$quantity,
             ]);
+            $this->get()->push($cart);
         }
-       return $item->increment('quantity',$quatity);
+       return $item->increment('quantity',$quantity);
     }
-    public function update(Product $product, $quatity)
+    public function update($id, $quantity)
     {
-        Cart::where('product_id','=',$product->id)
-            ->where('cookie_id','=',$this->getCookieId())
+        Cart::where('id','=',$id)
             ->update([
-                'quantity'=>$quatity
+                'quantity'=>$quantity
                 ]);
     }
     public function delete($id)
     {
         Cart::where('id','=',$id)
-            ->where('cookie_id','=',$this->getCookieId())
             ->delete();
     }
     public function empty()
     {
-        Cart::where('cookie_id','=',$this->getCookieId())->destroy();
+        Cart::query()->destroy();
     }
     public function total(): float
     {
-        return (float) Cart::where('cookie_id','=',$this->getCookieId())
+        /*return (float) Cart::where('cookie_id','=',$this->getCookieId())
             ->join('products','products.id','=','carts.product_id')
             ->selectRaw('SUM(products.price * carts.quantity) as total')
             ->value('total');
+        */
+        return $this->get()->sum(function ($item){
+            return $item->quantity * $item->product->price;
+        });
     }
 
-    protected function getCookieId()
-    {
-        $cookie_id= Cookie::get('cart_id');
-        if (!$cookie_id){
-            $cookie_id=Str::uuid();
-            Cookie::queue('cart_id',$cookie_id, 30 * 24 * 60);
-        }
-        return $cookie_id;
-    }
+
 }
