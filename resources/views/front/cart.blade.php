@@ -52,7 +52,7 @@
                 <!-- End Cart List Title -->
                 <!-- Cart Single List list -->
                 @foreach($cart->get() as $item)
-                    <div class="cart-single-list">
+                    <div class="cart-single-list" id="{{$item->id}}">
                           <div class="row align-items-center">
                         <div class="col-lg-1 col-md-1 col-12">
                             <a href="{{route('products.show', $item->product->slug)}}">
@@ -68,7 +68,7 @@
                         </div>
                         <div class="col-lg-2 col-md-2 col-12">
                             <div class="count-input">
-                                <input class="form-control" value="{{$item->quantity}}">
+                                <input class="form-control item-quantity" data-id="{{$item->id}}" value="{{$item->quantity}}">
 
                             </div>
                         </div>
@@ -79,7 +79,7 @@
                             <p>{{Currency::format(0)}}</p>
                         </div>
                         <div class="col-lg-1 col-md-2 col-12">
-                            <a class="remove-item" href="javascript:void(0)"><i class="lni lni-close"></i></a>
+                            <a class="remove-item" data-id="{{$item->id}}" href="javascript:void(0)"><i class="lni lni-close"></i></a>
                         </div>
                     </div>
                     </div>
@@ -127,4 +127,13 @@
     </div>
     <!--/ End Shopping Cart -->
 
+    @push('scripts')
+        <script>
+            const csrf_token= "{{ csrf_token() }}";
+        </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="{{asset('js/cart.js')}}"></script>
+    @endpush
+
+    @vite('resources/js/cart.js')
 </x-front-layout>
