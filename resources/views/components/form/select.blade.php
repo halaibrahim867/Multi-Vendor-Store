@@ -1,7 +1,7 @@
 
 
 @props([
-    'name','options' ,'selected'
+    'name','options' ,'selected'=>null
 ])
 
 <select

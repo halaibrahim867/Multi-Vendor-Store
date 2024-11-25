@@ -21,8 +21,7 @@ return new class extends Migration
             $table->float('price');
             $table->unsignedSmallInteger('quantity')->default(1);
             $table->json('options')->nullable();
-            $table->unique('order_id','product_id');
-            $table->timestamps();
+            $table->unique(['order_id','product_id']);
         });
     }
 
