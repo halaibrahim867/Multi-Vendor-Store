@@ -31,6 +31,7 @@ class Order extends Model
     {
         return $this->belongsToMany(Product::class,'order_items','order_id','product_id','id','id')
                    ->using(OrderItem::class)
+                    ->as('order_item')
                     ->withPivot([
                         'product_name','price','quantity','options'
                     ]);
