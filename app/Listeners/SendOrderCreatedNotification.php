@@ -34,7 +34,7 @@ class SendOrderCreatedNotification
         //$user->notify(new OrderCreatedNotification($order));
 
 
-        $user->notifyNow(new OrderCreatedNotification($order));
+        $user->notify(new OrderCreatedNotification($order));
 
 
 

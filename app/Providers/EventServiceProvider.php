@@ -28,7 +28,7 @@ class EventServiceProvider extends ServiceProvider
         //    EmptyCart::class
         //],
         OrderCreated::class =>[
-            DeductProductQuantity::class,
+            //DeductProductQuantity::class,
             SendOrderCreatedNotification::class,
             // EmptyCart::class
         ]

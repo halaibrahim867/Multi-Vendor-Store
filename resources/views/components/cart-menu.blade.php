@@ -13,7 +13,8 @@
             </div>
             <ul class="shopping-list">
                 @foreach($items as $item)
-                    <li>
+                   @if($item->product)
+                         <li>
                         <a href="javascript:void(0)" class="remove" title="Remove this item"><i
                                 class="lni lni-close"></i></a>
                         <div class="cart-img-head">
@@ -27,6 +28,7 @@
                             <p class="quantity">{{$item->quantity}}x - <span class="amount">{{Currency::format($item->product->price)}}</span></p>
                         </div>
                     </li>
+                    @endif
                 @endforeach
             </ul>
             <div class="bottom">
