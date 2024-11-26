@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\OrderCreated;
 use App\Listeners\DeductProductQuantity;
 use App\Listeners\EmptyCart;
+use App\Listeners\SendOrderCreatedNotification;
 use App\Models\Order;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -28,7 +29,8 @@ class EventServiceProvider extends ServiceProvider
         //],
         OrderCreated::class =>[
             DeductProductQuantity::class,
-            EmptyCart::class
+            SendOrderCreatedNotification::class,
+            // EmptyCart::class
         ]
     ];
 
