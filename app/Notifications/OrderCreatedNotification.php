@@ -29,7 +29,7 @@ class OrderCreatedNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['database'];
 
         /*$channels =['database'];
 
@@ -61,6 +61,19 @@ class OrderCreatedNotification extends Notification implements ShouldQueue
                     ->line("A new order (#{$this->order->number}) created by {$addr->name} from {$addr->country_name}")
                     ->action('View Order', url('/dashboard'))
                     ->line('Thank you for using our application!');
+    }
+
+
+    public function toDatabase(object $notifiable)
+    {
+        $addr =$this->order->billingAddress;
+
+        return [
+            'body'=>"A new order (#{$this->order->number}) created by {$addr->name} from {$addr->country_name}",
+            'icon'=>'fas fa-file',
+            'url'=>url('/dashboard'),
+            'order_id'=>$this->order->id,
+        ];
     }
 
     /**
