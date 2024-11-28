@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Fortify;
+use Illuminate\Support\Facades\Config;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -20,7 +22,24 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $request= \request();
+        if ($request->is('admin/*')){
+
+            Config::set('fortify.guard','admin');
+            Config::set('fortify.passwords','admins');
+            Config::set('fortify.prefix','admin');
+            //Config::set('fortify.home','admin/dashboard');
+        }
+
+        $this->app->instance(LoginResponse::class,new class implements LoginResponse{
+            public function toResponse($request)
+            {
+                 if ($request->user('admin')){
+                     return redirect()->intended('admin/dashboard');
+                 }
+                 return redirect()->intended('/');
+            }
+        });
     }
 
     /**
@@ -28,6 +47,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
@@ -43,7 +63,12 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
 
-        Fortify::viewPrefix('auth.');
+        if (Config::get('fortify.guard') == 'admin'){
+            Fortify::viewPrefix('auth.');
+        }else{
+            Fortify::viewPrefix('front.auth.');
+        }
+
 
         //Fortify::loginView('auth.login');
        // Fortify::registerView(function (){

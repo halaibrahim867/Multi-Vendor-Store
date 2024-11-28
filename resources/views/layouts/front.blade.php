@@ -86,18 +86,35 @@
                         </div>
                         <div class="col-lg-4 col-md-4 col-12">
                             <div class="top-end">
-                                <div class="user">
-                                    <i class="lni lni-user"></i>
-                                    Hello
-                                </div>
-                                <ul class="user-login">
-                                    <li>
-                                        <a href="login.html">Sign In</a>
-                                    </li>
-                                    <li>
-                                        <a href="register.html">Register</a>
-                                    </li>
-                                </ul>
+                                @if(\Illuminate\Support\Facades\Auth::check())
+                                    <div class="user">
+                                        <i class="lni lni-user"></i>
+                                            {{Auth::user()->name}}
+                                    </div>
+                                    <ul class="user-login">
+                                        <li>
+                                            <a href="{{route('logout')}}" onclick="event.preventDefault();document.getElementById('logout').submit()">Sign out</a>
+                                        </li>
+                                        <li>
+                                            <form action="{{route('logout')}}" id="logout" method="post" style="display:none">
+                                                @csrf
+                                            </form>
+                                        </li>
+                                    </ul>
+                                @else
+                                    <div class="user">
+                                        <i class="lni lni-user"></i>
+                                        Hello
+                                    </div>
+                                    <ul class="user-login">
+                                        <li>
+                                            <a href="{{route('login')}}">Sign In</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{route('register')}}">Register</a>
+                                        </li>
+                                    </ul>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -453,7 +470,7 @@
         <script src="{{asset('assets/js/tiny-slider.js')}}"></script>
         <script src="{{asset('assets/js/glightbox.min.js')}}"></script>
         <script src="{{asset('assets/js/main.js')}}"></script>
-        @stack('scripts')
+
     </body>
 
 </html>

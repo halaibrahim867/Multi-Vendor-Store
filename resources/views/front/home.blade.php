@@ -1,5 +1,4 @@
 <x-front-layout>
-
     <!-- Start Hero Area -->
     <section class="hero-area">
         <div class="container">
@@ -818,4 +817,5 @@
             setInterval(timer, 1000);
         </script>
     @endpush
+
 </x-front-layout>
