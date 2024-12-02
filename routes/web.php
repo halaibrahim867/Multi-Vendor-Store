@@ -9,6 +9,7 @@ use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,25 +22,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class,'index'])
-    ->name('home');
+Route::group([
+    'prefix'=> LaravelLocalization::setLocale(),
+], function () {
 
-Route::get('/products',[ProductController::class,'index'])
-    ->name('products.index');
+    Route::get('/', [HomeController::class,'index'])
+        ->name('home');
 
-Route::get('/products/{product:slug}',[ProductController::class,'show'])
-    ->name('products.show');
+    Route::get('/products',[ProductController::class,'index'])
+        ->name('products.index');
 
-Route::resource('cart',CartController::class);
+    Route::get('/products/{product:slug}',[ProductController::class,'show'])
+        ->name('products.show');
 
-Route::get('checkout',[CheckoutController::class,'create'])->name('checkout');
-Route::post('checkout',[CheckoutController::class,'store']);
+    Route::resource('cart',CartController::class);
 
-Route::get('auth/user/2fa',[TwoFactorAuthenticationController::class,'index'])
+    Route::get('checkout',[CheckoutController::class,'create'])->name('checkout');
+    Route::post('checkout',[CheckoutController::class,'store']);
+
+    Route::get('auth/user/2fa',[TwoFactorAuthenticationController::class,'index'])
         ->name('front.2fa');
 
-Route::post('currency',[CurrencyConverterController::class,'store'])
+    Route::post('currency',[CurrencyConverterController::class,'store'])
         ->name('currency.store');
+
+});
 
 /*
 Route::middleware('auth')->group(function () {
