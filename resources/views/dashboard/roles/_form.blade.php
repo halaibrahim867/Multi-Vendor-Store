@@ -6,7 +6,7 @@
 <fieldset>
     <legend>{{ __('Abilities') }}</legend>
 
-    @foreach (app('abilities') as $ability_code => $ability_name)
+    @foreach (config('abilities') as $ability_code => $ability_name)
         <div class="row mb-2">
             <div class="col-md-6">
                 {{ is_callable($ability_name) ? $ability_name() : $ability_name }}
