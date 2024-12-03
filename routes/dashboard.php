@@ -4,11 +4,12 @@
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ProfileController;
+use App\Http\Controllers\Dashboard\RolesController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
-    'middleware'=>['auth:admin'],
+    'middleware'=>['auth:admin,web'],
     'as'=>'dashboard.',
     'prefix'=>'admin/dashboard'
 
@@ -29,8 +30,11 @@ Route::group([
     Route::delete('categories/force-delete',[CategoryController::class,'forceDelete'])
         ->name('categories.force-delete');
 
-    Route::resource('/categories',CategoryController::class);
+    Route::resources([
+        'products'=>ProductController::class,
+        'categories'=>CategoryController::class,
+        'roles'=>RolesController::class
+    ]);
 
-    Route::resource('/products',ProductController::class);
 });
 

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Exception;
 use GuzzleHttp\Psr7\UploadedFile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -18,6 +20,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        if (Gate::denies('categories.view')){
+            abort(403);
+        }
         $request= \request();
 
         $categories=Category::with('parent')
@@ -43,6 +48,10 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        if (!Gate::allows('categories.create')){
+            abort(403);
+        }
+
         $parents=Category::all();
         $category=new Category();
         return view('dashboard.categories.create',compact('category','parents'));
@@ -53,6 +62,8 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('categories.create');
+
         $request->validate(Category::rules());
         $request->merge([
             'slug'=>Str::slug($request->post('name'))
@@ -74,6 +85,9 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+        if (Gate::denies('categories.view')){
+            abort(403);
+        }
         return view('dashboard.categories.show',[
             'category'=>$category
         ]);
@@ -84,6 +98,8 @@ class CategoryController extends Controller
      */
     public function edit(string $id)
     {
+        Gate::authorize('categories.update');
+
         try {
             $category=Category::findOrFail($id);
         }catch (Exception $e){
@@ -105,9 +121,9 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CategoryRequest $request, string $id)
     {
-        $request->validate(Category::rules($id));
+        //$request->validate(Category::rules($id));
         $category=Category::findOrFail($id);
 
         $old_image=$category->image;
@@ -134,6 +150,8 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
+        Gate::authorize('categories.delete');
+
         $category=Category::findOrFail($id);
 
         $category->delete();
