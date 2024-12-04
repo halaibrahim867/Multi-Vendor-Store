@@ -17,7 +17,7 @@
         ],
         [
             'icon'=>'far fa-circle nav-icon',
-            'route'=>'dashboard.categories.index',
+            'route'=>'dashboard.products.index',
             'title'=>'Products',
             'active'=>'dashboard.products.*',
             'ability'=>'products.view'
@@ -35,5 +35,19 @@
             'title'=>'Roles',
             'active'=>'dashboard.roles.*',
             'ability'=>'roles.view'
+        ],
+        [
+            'icon'=>'far fa-users nav-icon',
+            'route'=>'dashboard.users.index',
+            'title'=>'Users',
+            'active'=>'dashboard.users.*',
+            'ability'=>'users.view'
+        ],
+        [
+            'icon'=>'far fa-users nav-icon',
+            'route'=>'dashboard.admins.index',
+            'title'=>'Admins',
+            'active'=>'dashboard.admins.*',
+            'ability'=>'admins.view'
         ],
     ];

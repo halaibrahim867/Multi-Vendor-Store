@@ -1,10 +1,12 @@
 <?php
 
 
+use App\Http\Controllers\Dashboard\AdminsController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\RolesController;
+use App\Http\Controllers\Dashboard\UsersController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,7 +35,9 @@ Route::group([
     Route::resources([
         'products'=>ProductController::class,
         'categories'=>CategoryController::class,
-        'roles'=>RolesController::class
+        'roles'=>RolesController::class,
+        'admins'=>AdminsController::class,
+        'users' => UsersController::class,
     ]);
 
 });

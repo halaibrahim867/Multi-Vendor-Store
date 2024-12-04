@@ -30,5 +30,7 @@ return [
     'roles.create'=>'Create Roles',
     'roles.update'=>'Update Roles',
     'roles.delete'=>'Delete Roles',
+    'roles.restore'=>'Restore Roles',
+    'roles.force-delete'=>'Force delete Roles'
 
 ];
