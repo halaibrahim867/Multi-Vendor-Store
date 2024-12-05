@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 
 class Category extends Model
 {
-    use HasFactory , SoftDeletes;
+    use HasFactory;
 
     protected $fillable=[
         'name','parent_id','description','image','slug','status'
