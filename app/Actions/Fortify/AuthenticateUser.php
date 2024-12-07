@@ -5,6 +5,7 @@ namespace App\Actions\Fortify;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use function Symfony\Component\String\u;
 
 class AuthenticateUser
 {
@@ -15,7 +16,7 @@ class AuthenticateUser
          $user=Admin::where('username','=',$username)
                  ->orWhere('email','=',$username)
                  ->orWhere('phone_number','=',$username)
-                ->first();
+                 ->first();
 
          if ($user && Hash::check($password, $user->password)){
              return $user;

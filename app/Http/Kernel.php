@@ -40,6 +40,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\UpdateUserLastActiveAt::class,
             \App\Http\Middleware\MarkNotificationAsRead::class,
             //\App\Http\Middleware\SetAppLocale::class,
+           // \App\Http\Middleware\RememberUser::class,
         ],
 
         'api' => [

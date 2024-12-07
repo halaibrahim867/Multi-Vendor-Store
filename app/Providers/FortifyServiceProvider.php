@@ -3,16 +3,20 @@
 namespace App\Providers;
 
 use App\Actions\Fortify\AuthenticateUser;
+use App\Actions\Fortify\AuthenticateUserForRemember;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\LoginResponse;
+use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Fortify;
 use Illuminate\Support\Facades\Config;
 
@@ -30,6 +34,10 @@ class FortifyServiceProvider extends ServiceProvider
             Config::set('fortify.passwords','admins');
             Config::set('fortify.prefix','admin');
             //Config::set('fortify.home','admin/dashboard');
+        }else {
+            Config::set('fortify.guard', 'web');
+            Config::set('fortify.passwords', 'users');
+            Config::set('fortify.prefix', '');
         }
 
         $this->app->instance(LoginResponse::class,new class implements LoginResponse{
@@ -41,6 +49,32 @@ class FortifyServiceProvider extends ServiceProvider
                  return redirect()->intended('/');
             }
         });
+        /*$this->app->instance(LogoutResponse::class,new class implements LogoutResponse{
+            public function toResponse($request)
+            {
+                // Log out the user
+                $user=Auth::guard('web')->logout();
+
+                // Invalidate the session
+                $request->session()->invalidate();
+
+                // Regenerate the session token
+                //$request->session()->regenerateToken();
+
+                // Clear the remember me cookie (dynamically get the cookie name based on guard)
+                $cookieName = 'remember_' . Auth::guard('web')->getRecallerName();
+                //dd(Cookie::get());
+                Cookie::forget($cookieName);
+
+                // Debugging: Uncomment this to check the cookies
+                if ($user) {
+                    $user->forceFill(['remember_token' => null])->save();
+                }
+
+                // Redirect to the homepage or login page
+                return redirect('/')->with('success', 'Signed out successfully');
+            }
+        });*/
     }
 
     /**
@@ -71,6 +105,7 @@ class FortifyServiceProvider extends ServiceProvider
 
             Fortify::viewPrefix('auth.');
         }else{
+            Fortify::authenticateUsing([new AuthenticateUserForRemember,'authenticate']);
             Fortify::viewPrefix('front.auth.');
         }
 
