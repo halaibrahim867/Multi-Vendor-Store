@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\DeliveryLocationUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Delivery;
 use Illuminate\Http\Request;
@@ -16,8 +17,8 @@ class DeliveriesController extends Controller
             'id',
             'order_id',
             'status',
-            DB::raw("ST_X(current_location) AS lng"),
             DB::raw("ST_Y(current_location) AS lat"),
+            DB::raw("ST_X(current_location) AS lng"),
         ])
             ->where('id',$id)
             ->firstOrFail();
@@ -34,6 +35,8 @@ class DeliveriesController extends Controller
         $delivery->update([
             'current_location'=>DB::raw("POINT({$request->lng},{$request->lat})")
         ]);
+
+        event(new DeliveryLocationUpdated($delivery,$request->lat,$request->lng));
 
         return $delivery;
     }

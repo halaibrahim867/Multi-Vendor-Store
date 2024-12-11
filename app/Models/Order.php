@@ -15,6 +15,10 @@ class Order extends Model
         'status','payment_status'
     ];
 
+    public function delivery()
+    {
+        return $this->hasOne(Delivery::class);
+    }
     public function store()
     {
         return $this->belongsTo(Store::class);

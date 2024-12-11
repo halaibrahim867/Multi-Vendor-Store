@@ -7,6 +7,7 @@ use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CheckoutController;
 use App\Http\Controllers\Front\CurrencyConverterController;
 use App\Http\Controllers\Front\HomeController;
+use App\Http\Controllers\Front\OrdersControllers;
 use App\Http\Controllers\Front\PaymentsController;
 use App\Http\Controllers\Front\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -72,6 +73,8 @@ Route::group([
 
     Route::any('stripe/webhook',[StripeWebhooksController::class,'handle']);
 
+    Route::get('/orders/{order}',[OrdersControllers::class,'show'])
+            ->name('orders.show');
 });
 
 /*
